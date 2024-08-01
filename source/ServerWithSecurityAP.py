@@ -93,6 +93,36 @@ def main(args):
                             print("Closing connection...")
                             s.close()
                             break
+                        case 3:
+                            # If the packet is for authentication
+
+                            # Receive M1 = length of authentication message in bytes
+                            message_len = convert_bytes_to_int(
+                                read_bytes(client_socket, 8)
+                            )
+
+                            # Receive M2 = authentication message
+                            message_data = read_bytes(client_socket, message_len)
+
+                            with open('source/auth/_private_key.pem', 'rb') as key_file:
+                                private_key = serialization.load_pem_private_key(key_file.read(), password=None, backend=default_backend())
+                            
+                            with open('source/auth/server_signed.crt', 'rb') as cert_file:
+                                signed_cert_bytes = cert_file.read()
+
+                            signed_message = sign_message(message_data, private_key)
+
+                            # Send M1 = size of signed authentication message in bytes
+                            client_socket.sendall(convert_int_to_bytes(len(signed_message)))
+
+                            # Send M2 = signed authentication message
+                            client_socket.sendall(signed_message)
+
+                            # Send M1 = size of signed certificate in bytes
+                            client_socket.sendall(convert_int_to_bytes(len(signed_cert_bytes)))
+
+                            # Send M2 = signed certificate file
+                            client_socket.sendall(signed_cert_bytes)
 
     except Exception as e:
         print(e)
@@ -102,6 +132,17 @@ def handler(signal_received, frame):
     # Handle any cleanup here
     print('SIGINT or CTRL-C detected. Exiting gracefully')
     exit(0)
+
+# Sign the message with private key and pad the message
+def sign_message(message, private_key):
+    return private_key.sign(
+        message,
+        padding.PSS(
+            mgf=padding.MGF1(hashes.SHA256()),
+            salt_length=padding.PSS.MAX_LENGTH
+        ),
+        hashes.SHA256()
+    )
     
 if __name__ == "__main__":
     # Tell Python to run the handler() function when SIGINT is recieved
