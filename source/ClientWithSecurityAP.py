@@ -41,6 +41,59 @@ def main(args):
         s.connect((server_address, port))
         print("Connected")
 
+        # Authenticate method mode 3
+        s.sendall(convert_int_to_bytes(3))
+        filename_bytes = (bytes("test", encoding="utf8"))
+        s.sendall(convert_int_to_bytes(len(filename_bytes)))
+        s.sendall(filename_bytes)
+
+        msg_m1_size = s.recv(8)
+        # msg_m1_size = int.from_bytes(size_bytes, byteorder='big')
+        msg_m2 = s.recv(msg_m1_size)
+        cert_m1_size = s.recv(8)
+        # cert_m1_size = int.from_bytes(size_bytes, byteorder='big')
+        cert_m2 = s.recv(cert_m1_size)
+
+        with open('cacsertificate.crt', 'rb') as cert_file:
+            ca_cert_data = cert_file.read()
+            ca_cert = x509.load_pem_x509_certificate(ca_cert_data, default_backend())
+
+        # Extract CA public key
+        ca_public_key = ca_cert.public_key()
+        print("Public key extracted from CA certificate.")
+
+        # Load the received certificate directly from bytes
+        received_cert = x509.load_pem_x509_certificate(cert_m2, default_backend())
+        cert_m2_signature = received_cert.signature
+        cert_m2_tbs_certificate = received_cert.tbs_certificate_bytes
+        try:
+            ca_public_key.verify(
+                cert_m2_signature,
+                cert_m2_tbs_certificate,
+                padding.PKCS1v15(),  # Padding scheme used by the CA
+                hashes.SHA256()      # Hash algorithm used by the CA
+            )
+            print("Certificate verification successful.")
+        except Exception as e:
+            print(f"Certificate verification failed: {e}")
+            s.sendall(convert_int_to_bytes(2))
+            
+        # Extract the public key from the received certificate
+        public_key = received_cert.public_key()    
+        try:
+            public_key.verify(
+                msg_m2,
+                filename_bytes,
+                padding.PSS(mgf=padding.MGF1(hashes.SHA256()), salt_length=padding.PSS.MAX_LENGTH), 
+                hashes.SHA256() 
+            )
+            print("Works")
+        except Exception as e:
+            print(f"Verification failed: {e}")
+            s.sendall(convert_int_to_bytes(2))
+
+
+
         while True:
             filename = input(
                 "Enter a filename to send (enter -1 to exit):"
@@ -73,6 +126,7 @@ def main(args):
 
     end_time = time.time()
     print(f"Program took {end_time - start_time}s to run.")
+
 
 
 if __name__ == "__main__":
