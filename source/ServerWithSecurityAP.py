@@ -13,6 +13,7 @@ from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.backends import default_backend
 
+used_nonces = set()
 
 def convert_int_to_bytes(x):
     """
@@ -104,6 +105,17 @@ def main(args):
                             # Receive M2 = authentication message
                             message_data = read_bytes(client_socket, message_len)
 
+                            # Extract nonce from the end of the message
+                            nonce_size = 16 
+                            nonce = message_data[-nonce_size:]
+
+                            # Validate the nonce
+                            if not is_nonce_valid(nonce):
+                                print("Invalid or reused nonce sent by client")
+                                print("Closing connection...")
+                                client_socket.close()
+                                s.close()
+
                             with open('source/auth/_private_key.pem', 'rb') as key_file:
                                 private_key = serialization.load_pem_private_key(key_file.read(), password=None, backend=default_backend())
                             
@@ -143,6 +155,14 @@ def sign_message(message, private_key):
         ),
         hashes.SHA256()
     )
+
+# Check if nonce sent by client has been used before
+def is_nonce_valid(nonce):
+    if nonce in used_nonces:
+        return False
+    
+    used_nonces.add(nonce)
+    return True
     
 if __name__ == "__main__":
     # Tell Python to run the handler() function when SIGINT is recieved

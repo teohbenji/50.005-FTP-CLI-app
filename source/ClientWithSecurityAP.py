@@ -43,7 +43,7 @@ def main(args):
 
         # Authenticate method mode 3
         s.sendall(convert_int_to_bytes(3))
-        filename_bytes = (bytes("test", encoding="utf8"))
+        filename_bytes = (bytes("test" + secrets.token_bytes(16), encoding="utf8")) # Added nonce to prevent replay attacks
         s.sendall(convert_int_to_bytes(len(filename_bytes)))
         s.sendall(filename_bytes)
 
