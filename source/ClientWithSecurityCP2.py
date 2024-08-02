@@ -99,7 +99,18 @@ def main(args):
             print(f"Verification failed: {e}")
             s.sendall(convert_int_to_bytes(2))
 
+        # Mode 4: Generate the session key, encrypt it and then send it 
+        session_key = Fernet.generate_key()
+        cipher = Fernet(session_key)
 
+        encrypted_session_key = public_key.encrypt(
+            session_key,
+            padding.PKCS1v15()
+        )
+
+        s.sendall(convert_int_to_bytes(4))
+        s.sendall(convert_int_to_bytes(len(encrypted_session_key)))
+        s.sendall(encrypted_session_key)
 
         while True:
             filename = input(
@@ -123,15 +134,7 @@ def main(args):
             # Send the file
             with open(filename, mode="rb") as fp:
                 data = fp.read()
-                chunks = []
-                for i in range(0, len(data), 117):
-                    chunks.append(data[i : i+117])
-                encrypted_data = b""
-                for chunk in chunks:
-                    encrypted_data += public_key.encrypt(
-                                    chunk,
-                                    padding.PKCS1v15()
-                                    )
+                encrypted_data = cipher.encrypt(data)
                     
                 s.sendall(convert_int_to_bytes(1))
                 s.sendall(convert_int_to_bytes(len(encrypted_data)))

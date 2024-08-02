@@ -56,6 +56,8 @@ def main(args):
 
             client_socket, client_address = s.accept()
             with client_socket:
+                cipher = None # Used to decrypt encrypted file data
+
                 while True:
                     match convert_bytes_to_int(read_bytes(client_socket, 8)):
                         case 0:
@@ -79,13 +81,7 @@ def main(args):
                             # print(file_data)
 
                             # Decrypt data
-                            file_data = b""
-                            for i in range(0, len(encrypted_data), 128):  
-                                chunk = encrypted_data[i:i+128]
-                                file_data += private_key.decrypt(
-                                    chunk,
-                                    padding.PKCS1v15()
-                                )
+                            file_data = cipher.decrypt(encrypted_data)
                             
                             filename = "recv_" + filename.split("/")[-1]
 
@@ -141,6 +137,22 @@ def main(args):
 
                             # Send M2 = signed certificate file
                             client_socket.sendall(signed_cert_bytes)
+                            break
+                        case 4:
+                            # Mode 4 
+                            # Receive M1 = size of encrypted generated session key in bytes
+                            encrypted_session_key_len = convert_bytes_to_int(read_bytes(client_socket, 8))
+
+                            # Receive M2 = encrypted generated session key
+                            encrypted_session_key = read_bytes(client_socket, encrypted_session_key_len)
+
+                            # Decrypt the session key
+                            session_key = private_key.decrypt(
+                                encrypted_session_key,
+                                padding.PKCS1v15()
+                            )
+
+                            cipher = Fernet(session_key)
 
     except Exception as e:
         print(e)
