@@ -123,9 +123,19 @@ def main(args):
             # Send the file
             with open(filename, mode="rb") as fp:
                 data = fp.read()
+                chunks = []
+                for i in range(0, len(data), 117):
+                    chunks.append(data[i : i+117])
+                encrypted_data = b""
+                for chunk in chunks:
+                    encrypted_data += public_key.encrypt(
+                                    chunk,
+                                    padding.PKCS1v15()
+                                    )
+                    
                 s.sendall(convert_int_to_bytes(1))
-                s.sendall(convert_int_to_bytes(len(data)))
-                s.sendall(data)
+                s.sendall(convert_int_to_bytes(len(encrypted_data)))
+                s.sendall(encrypted_data)
 
         # Close the connection
         s.sendall(convert_int_to_bytes(2))

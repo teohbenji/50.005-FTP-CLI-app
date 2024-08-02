@@ -73,6 +73,7 @@ def main(args):
             else:
                 print("Certificate is expired or not yet valid.")
                 raise Exception()
+            
             ca_public_key.verify(
                 cert_m2_signature,
                 cert_m2_tbs_certificate,
