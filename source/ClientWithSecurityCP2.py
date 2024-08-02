@@ -105,11 +105,11 @@ def main(args):
 
         encrypted_session_key = public_key.encrypt(
             session_key,
-            padding.PSS(mgf=padding.MGF1(hashes.SHA256()), salt_length=padding.PSS.MAX_LENGTH)
+            padding.PKCS1v15()
         )
 
         s.sendall(convert_int_to_bytes(4))
-        s.sendall(convert_int_to_bytes(len(encrypted_session_key)))
+        s.sendall((len(encrypted_session_key)).to_bytes(16, "big"))
         s.sendall(encrypted_session_key)
 
         while True:
@@ -135,6 +135,11 @@ def main(args):
             with open(filename, mode="rb") as fp:
                 data = fp.read()
                 encrypted_data = cipher.encrypt(data)
+
+                # Write the file with 'enc_' prefix
+                enc_filename = "enc_" + filename.split("/")[-1]
+                with open(f"send_files_enc/{enc_filename}", mode="wb") as fp:
+                    fp.write(encrypted_data)
                     
                 s.sendall(convert_int_to_bytes(1))
                 s.sendall(convert_int_to_bytes(len(encrypted_data)))

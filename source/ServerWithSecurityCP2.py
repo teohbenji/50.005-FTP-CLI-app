@@ -78,7 +78,10 @@ def main(args):
                                 read_bytes(client_socket, 8)
                             )
                             encrypted_data = read_bytes(client_socket, file_len)
-                            # print(file_data)
+                            # receive encrypted file
+                            recv_enc_filename = "enc_recv_" + filename.split("/")[-1]
+                            with open(f"recv_files_enc/{recv_enc_filename}", mode="wb") as fp:
+                                fp.write(encrypted_data)
 
                             # Decrypt data
                             file_data = cipher.decrypt(encrypted_data)
@@ -137,11 +140,10 @@ def main(args):
 
                             # Send M2 = signed certificate file
                             client_socket.sendall(signed_cert_bytes)
-                            break
                         case 4:
                             # Mode 4 
                             # Receive M1 = size of encrypted generated session key in bytes
-                            encrypted_session_key_len = convert_bytes_to_int(read_bytes(client_socket, 8))
+                            encrypted_session_key_len = convert_bytes_to_int(read_bytes(client_socket, 16))
 
                             # Receive M2 = encrypted generated session key
                             encrypted_session_key = read_bytes(client_socket, encrypted_session_key_len)
@@ -149,7 +151,7 @@ def main(args):
                             # Decrypt the session key
                             session_key = private_key.decrypt(
                                 encrypted_session_key,
-                                padding.PSS(mgf=padding.MGF1(hashes.SHA256()), salt_length=padding.PSS.MAX_LENGTH)
+                                padding.PKCS1v15()
                             )
 
                             cipher = Fernet(session_key)
