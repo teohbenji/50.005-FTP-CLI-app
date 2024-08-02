@@ -47,14 +47,12 @@ def main(args):
         s.sendall(convert_int_to_bytes(len(filename_bytes)))
         s.sendall(filename_bytes)
 
-        msg_m1_size = s.recv(8)
-        # msg_m1_size = int.from_bytes(size_bytes, byteorder='big')
+        msg_m1_size = int.from_bytes(s.recv(8), byteorder='big')
         msg_m2 = s.recv(msg_m1_size)
-        cert_m1_size = s.recv(8)
-        # cert_m1_size = int.from_bytes(size_bytes, byteorder='big')
+        cert_m1_size = int.from_bytes(s.recv(8), byteorder='big')
         cert_m2 = s.recv(cert_m1_size)
 
-        with open('cacsertificate.crt', 'rb') as cert_file:
+        with open('source/auth/cacsertificate.crt', 'rb') as cert_file:
             ca_cert_data = cert_file.read()
             ca_cert = x509.load_pem_x509_certificate(ca_cert_data, default_backend())
 
