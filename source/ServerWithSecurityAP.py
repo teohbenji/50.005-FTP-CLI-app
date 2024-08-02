@@ -116,7 +116,7 @@ def main(args):
                                 client_socket.close()
                                 s.close()
 
-                            with open('source/auth/_private_key.pem', 'rb') as key_file:
+                            with open('source/auth/server_private_key.pem', 'rb') as key_file:
                                 private_key = serialization.load_pem_private_key(key_file.read(), password=None, backend=default_backend())
                             
                             with open('source/auth/server_signed.crt', 'rb') as cert_file:
