@@ -63,9 +63,16 @@ def main(args):
 
         # Load the received certificate directly from bytes
         received_cert = x509.load_pem_x509_certificate(cert_m2, default_backend())
+
         cert_m2_signature = received_cert.signature
         cert_m2_tbs_certificate = received_cert.tbs_certificate_bytes
         try:
+            current_time = datetime.now()
+            if received_cert.not_valid_before <= current_time <= received_cert.not_valid_after:
+                print("Certificate is within the validity period.")
+            else:
+                print("Certificate is expired or not yet valid.")
+                raise Exception()
             ca_public_key.verify(
                 cert_m2_signature,
                 cert_m2_tbs_certificate,
@@ -73,6 +80,7 @@ def main(args):
                 hashes.SHA256()      # Hash algorithm used by the CA
             )
             print("Certificate verification successful.")
+
         except Exception as e:
             print(f"Certificate verification failed: {e}")
             s.sendall(convert_int_to_bytes(2))
