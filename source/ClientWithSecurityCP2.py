@@ -76,8 +76,8 @@ def main(args):
             ca_public_key.verify(
                 cert_m2_signature,
                 cert_m2_tbs_certificate,
-                padding.PKCS1v15(),  # Padding scheme used by the CA
-                hashes.SHA256()      # Hash algorithm used by the CA
+                padding.PKCS1v15(),
+                hashes.SHA256()     
             )
             print("Certificate verification successful.")
 
@@ -105,7 +105,7 @@ def main(args):
 
         encrypted_session_key = public_key.encrypt(
             session_key,
-            padding.PKCS1v15()
+            padding.PSS(mgf=padding.MGF1(hashes.SHA256()), salt_length=padding.PSS.MAX_LENGTH)
         )
 
         s.sendall(convert_int_to_bytes(4))

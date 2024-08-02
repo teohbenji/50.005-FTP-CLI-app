@@ -149,7 +149,7 @@ def main(args):
                             # Decrypt the session key
                             session_key = private_key.decrypt(
                                 encrypted_session_key,
-                                padding.PKCS1v15()
+                                padding.PSS(mgf=padding.MGF1(hashes.SHA256()), salt_length=padding.PSS.MAX_LENGTH)
                             )
 
                             cipher = Fernet(session_key)
