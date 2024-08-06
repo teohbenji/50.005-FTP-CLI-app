@@ -41,8 +41,9 @@ def main(args):
     language_full_name = ['English', 'Malay', 'Filipino']
     language_chosen = None
     while language_chosen != "0" and language_chosen !="1" and language_chosen !="2":
-        language_chosen = input("""Enter your choice of language:\nMasukkan bahasa pilihan anda:\nIlagay ang iyong piniling wika:\n[0] - English, [1] - Malay, [2] - Filipino\nYour choice/Pilihan anda/Tu elección:  """)
         print("\nPlease enter a number. Either 0, 1, 2\nSila masukkan nombor. Sama ada 0, 1, 2\nMangyaring magpasok ng numero. Alinman sa 0, 1, 2\n")
+        language_chosen = input("""Enter your choice of language:\nMasukkan bahasa pilihan anda:\nIlagay ang iyong piniling wika:\n[0] - English, [1] - Malay, [2] - Filipino\nYour choice/Pilihan anda/Tu elección:  """)
+        
     
     language = gettext.translation('base', localedir=locales_dir, languages=[languages_choice[int(language_chosen)]])
     language.install()
