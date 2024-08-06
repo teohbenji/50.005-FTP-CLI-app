@@ -12,8 +12,22 @@ from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.backends import default_backend
+import logging
+import psutil
 
 used_nonces = set()
+
+# For logging
+logging.basicConfig(filename='logs/server_log.txt', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+def log_event(event_name):
+    cpu_usage = psutil.cpu_percent()
+    memory_info = psutil.virtual_memory()
+    network_info = psutil.net_io_counters()
+    current_time = datetime.now()
+    logging.info(f'{current_time} {event_name}')
+    logging.info(f'CPU Usage: {cpu_usage}%, Memory Usage: {memory_info.percent}%, Network Sent: {network_info.bytes_sent}, Network Received: {network_info.bytes_recv}')
+
 
 def convert_int_to_bytes(x):
     """
@@ -84,6 +98,7 @@ def main(args):
                                 fp.write(encrypted_data)
 
                             # Decrypt data
+                            log_event("Receiving encrypted data")
                             file_data = cipher.decrypt(encrypted_data)
                             
                             filename = "recv_" + filename.split("/")[-1]
@@ -91,6 +106,8 @@ def main(args):
                             # Write the file with 'recv_' prefix
                             with open(f"recv_files/{filename}", mode="wb") as fp:
                                 fp.write(file_data)
+
+                            log_event(f"Finished receiving file in {(time.time() - start_time)}s!")
                             print(f"Finished receiving file in {(time.time() - start_time)}s!")
 
                         case 2:
