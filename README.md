@@ -48,13 +48,13 @@ This will create 3 directories: `/recv_files`, `/recv_files_enc`, and `/send_fil
 
 ### Run server and client files
 
-In two separate shell sessions, run (assuming you're in root project directory):
+In two separate shell sessions, run the server first(assuming you're in root project directory):
 
 ```
 python3 source/ServerWithoutSecurity.py
 ```
 
-and:
+and then the client afterwards:
 
 ```
 python3 source/ClientWithoutSecurity.py
@@ -83,6 +83,29 @@ exit
 ```
 
 Do not forget to spawn the shell again if you'd like to restart the assignment.
+
+### Uploading files
+In the shell session with the client code running, you will be first prompted to choose the language. Enter 0 for English, 1 for Malay and 2 for Spanish.
+```
+Code here
+```
+Afterwards, enter the filepath of the file you want to upload. Example using file.txt in files folder
+```
+Enter a filename to send (enter -1 to exit):files/file.txt
+```
+Upon successful file upload, the following will be printed out on the server side
+```
+Receiving file...
+Finished receiving file in 0.028443574905395508s!
+```
+To exit the program, type -1 to exit the program at any time. Two messages will then be printed out, and the server program will stop running as well.
+Alternatively, force close the app using CTRL+C
+```
+Closing connection...
+Program took 1.9450325965881348s to run.
+```
+
+
 ## Sustainability
 This program promotes sustainability by making use of best practices for the writing of code, and logging of the file transfer process on the server side.
 
@@ -143,4 +166,5 @@ Example log output:
 ```
 2024-08-06 22:19:43,903 - INFO - 2024-08-06 22:19:43.903463 Finished receiving file in 0.018079519271850586s!
 2024-08-06 22:19:43,903 - INFO - CPU Usage: 0.0%, Memory Usage: 64.4%, Network Sent: 28377966, Network Received: 117408047
-```
+```## Inclusivity
+The app includes a feature that allows users to choose their preferred language upon startup of the client program. Users can select English, Malay or Spanish.
