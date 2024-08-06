@@ -94,7 +94,7 @@ def main(args):
                 padding.PSS(mgf=padding.MGF1(hashes.SHA256()), salt_length=padding.PSS.MAX_LENGTH), 
                 hashes.SHA256() 
             )
-            print("Works")
+            print("Successfully verified certificate")
         except Exception as e:
             print(f"Verification failed: {e}")
             s.sendall(convert_int_to_bytes(2))
