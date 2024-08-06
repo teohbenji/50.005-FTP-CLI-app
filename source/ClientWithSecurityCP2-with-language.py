@@ -13,6 +13,8 @@ from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.backends import default_backend
 
+#for language
+import gettext
 
 def convert_int_to_bytes(x):
     """
@@ -33,13 +35,27 @@ def main(args):
     server_address = args[1] if len(args) > 1 else "localhost"
 
     start_time = time.time()
+    # Set up gettext for different languages
+    locales_dir = 'locales'
+    languages_choice = ['en', 'my', 'tl']
+    language_full_name = ['English', 'Malay', 'Filipino']
+    language_chosen = None
+    while language_chosen != "0" and language_chosen !="1" and language_chosen !="2":
+        language_chosen = input("""Enter your choice of language:\nMasukkan bahasa pilihan anda:\nIlagay ang iyong piniling wika:\n[0] - English, [1] - Malay, [2] - Filipino\nYour choice/Pilihan anda/Tu elección:  """)
+        print("\nPlease enter a number. Either 0, 1, 2\nSila masukkan nombor. Sama ada 0, 1, 2\nMangyaring magpasok ng numero. Alinman sa 0, 1, 2\n")
+    
+    language = gettext.translation('base', localedir=locales_dir, languages=[languages_choice[int(language_chosen)]])
+    language.install()
+    _ = language.gettext
+
+    print(f"You have chosen {language_full_name[int(language_chosen)]}\n")
 
     # try:
-    print("Establishing connection to server...")
+    print(_("Establishing connection to server..."))
     # Connect to server
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((server_address, port))
-        print("Connected")
+        print(_("Connected"))
 
         # Authenticate method mode 3
         s.sendall(convert_int_to_bytes(3))
@@ -59,7 +75,7 @@ def main(args):
 
         # Extract CA public key
         ca_public_key = ca_cert.public_key()
-        print("Public key extracted from CA certificate.")
+        print(_("Public key extracted from CA certificate."))
 
         # Load the received certificate directly from bytes
         received_cert = x509.load_pem_x509_certificate(cert_m2, default_backend())
@@ -69,9 +85,9 @@ def main(args):
         try:
             current_time = datetime.now()
             if received_cert.not_valid_before <= current_time <= received_cert.not_valid_after:
-                print("Certificate is within the validity period.")
+                print(_("Certificate is within the validity period."))
             else:
-                print("Certificate is expired or not yet valid.")
+                print(_("Certificate is expired or not yet valid."))
                 raise Exception()
             ca_public_key.verify(
                 cert_m2_signature,
@@ -79,10 +95,10 @@ def main(args):
                 padding.PKCS1v15(),
                 hashes.SHA256()     
             )
-            print("Certificate verification successful.")
+            print(_("Certificate verification successful."))
 
         except Exception as e:
-            print(f"Certificate verification failed: {e}")
+            print(_(f"Certificate verification failed: {e}"))
             s.sendall(convert_int_to_bytes(2))
             
         # Extract the public key from the received certificate
@@ -94,9 +110,8 @@ def main(args):
                 padding.PSS(mgf=padding.MGF1(hashes.SHA256()), salt_length=padding.PSS.MAX_LENGTH), 
                 hashes.SHA256() 
             )
-            print("Successfully verified certificate")
         except Exception as e:
-            print(f"Verification failed: {e}")
+            print(_(f"Verification failed: {e}"))
             s.sendall(convert_int_to_bytes(2))
 
         # Mode 4: Generate the session key, encrypt it and then send it 
@@ -113,12 +128,12 @@ def main(args):
         s.sendall(encrypted_session_key)
 
         while True:
-            filename = input(
+            filename = input(_(
                 "Enter a filename to send (enter -1 to exit):"
-            ).strip()
+            )).strip()
 
             while filename != "-1" and (not pathlib.Path(filename).is_file()):
-                filename = input("Invalid filename. Please try again:").strip()
+                filename = input(_("Invalid filename. Please try again:")).strip()
 
             if filename == "-1":
                 s.sendall(convert_int_to_bytes(2))
@@ -147,10 +162,11 @@ def main(args):
 
         # Close the connection
         s.sendall(convert_int_to_bytes(2))
-        print("Closing connection...")
+        print(_("Closing connection..."))
 
     end_time = time.time()
-    print(f"Program took {end_time - start_time}s to run.")
+    duration = end_time - start_time
+    print(_(f"Program took") + str(duration) + (_("to run.")))
 
 
 
