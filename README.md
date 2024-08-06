@@ -83,3 +83,64 @@ exit
 ```
 
 Do not forget to spawn the shell again if you'd like to restart the assignment.
+## Sustainability
+This program promotes sustainability by making use of best practices for the writing of code, and logging of the file transfer process on the server side.
+
+### Best code practices
+
+**1. Proper use of context managers:**
+    Adding the `with` statement to the opening of sockets and files ensures proper resource management, preventing resource leaks.
+
+```
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+    ...
+
+with open('source/auth/cacsertificate.crt', 'rb') as cert_file:
+    ...
+```
+
+**2. Graceful handling of exceptions:**
+    Exception handling manages errors and provides meaningful messages to the user for a smoother debugging experience.
+
+```
+try:
+    public_key.verify(
+        msg_m2,
+        filename_bytes,
+        padding.PSS(mgf=padding.MGF1(hashes.SHA256()), salt_length=padding.PSS.MAX_LENGTH), 
+        hashes.SHA256() 
+    )
+
+print("Successfully verified certificate")
+
+except Exception as e:
+    print(f"Verification failed: {e}")
+    s.sendall(convert_int_to_bytes(2))
+```
+
+**3. Use of set data structure:**
+    A set is used in the server code to store the used nonces, as time complexity for all operations performed on the set is O(1) (insertion, membership check).
+
+```
+used_nonces = set()
+if nonce in used_nonces: # Membership check
+used_nonces.add(nonce) # Addition
+```
+
+### Logging
+
+The `log_event` function logs various system performance metrics and events during data processing. It captures:
+
+- **CPU Usage**: The percentage of CPU utilization at the time of the event.
+- **Memory Usage**: The percentage of memory used.
+- **Network Sent**: The total amount of data sent over the network.
+- **Network Received**: The total amount of data received over the network.
+Usage:
+```
+log_event(event_name)
+```
+Example log output:
+```
+2024-08-06 22:19:43,903 - INFO - 2024-08-06 22:19:43.903463 Finished receiving file in 0.018079519271850586s!
+2024-08-06 22:19:43,903 - INFO - CPU Usage: 0.0%, Memory Usage: 64.4%, Network Sent: 28377966, Network Received: 117408047
+```
