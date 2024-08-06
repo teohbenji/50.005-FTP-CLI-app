@@ -85,7 +85,7 @@ exit
 Do not forget to spawn the shell again if you'd like to restart the assignment.
 
 ### Uploading files
-In the shell session with the client code running, you will be first prompted to choose the language. Enter 0 for English, 1 for Malay and 2 for Spanish.
+In the shell session with the client code running, you will be first prompted to choose the language. Enter 0 for English, 1 for Malay and 2 for Filipino.
 ```
 Code here
 ```
@@ -163,8 +163,19 @@ Usage:
 log_event(event_name)
 ```
 Example log output:
+
 ```
 2024-08-06 22:19:43,903 - INFO - 2024-08-06 22:19:43.903463 Finished receiving file in 0.018079519271850586s!
 2024-08-06 22:19:43,903 - INFO - CPU Usage: 0.0%, Memory Usage: 64.4%, Network Sent: 28377966, Network Received: 117408047
-```## Inclusivity
-The app includes a feature that allows users to choose their preferred language upon startup of the client program. Users can select English, Malay or Spanish.
+```
+## Inclusivity
+The app includes a feature that allows users to choose their preferred language upon startup of the client program. Users can select English, Malay or Filipino. For example
+```
+English: Public key extracted from CA certificate.
+```
+```
+Malay: Kunci awam diekstrak dari sijil CA.
+```
+```
+Filipino: Public key na kinuha mula sa CA certificate.
+```
