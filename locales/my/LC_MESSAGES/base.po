@@ -1,0 +1,35 @@
+msgid "Establishing connection to server..."
+msgstr "Mewujudkan sambungan ke pelayan..."
+
+msgid "Connected"
+msgstr "Bersambung"
+
+msgid "Public key extracted from CA certificate."
+msgstr "Kunci awam diekstrak dari sijil CA."
+
+msgid "Certificate is within the validity period."
+msgstr "Sijil adalah dalam tempoh sah."
+
+msgid "Certificate verification successful."
+msgstr "Pengesahan sijil berjaya."
+
+msgid "Certificate verification failed: {e}"
+msgstr "Pengesahan sijil gagal: {e}"
+
+msgid "Verification failed: {e}"
+msgstr "Pengesahan gagal: {e}"
+
+msgid "Enter a filename to send (enter -1 to exit):"
+msgstr "Masukkan nama fail untuk dihantar (masukkan -1 untuk keluar):"
+
+msgid "Invalid filename. Please try again:"
+msgstr "Nama fail tidak sah. Sila cuba lagi:"
+
+msgid "Closing connection..."
+msgstr "Menutup sambungan..."
+
+msgid "Program took"
+msgstr "Program mengambil "
+
+msgid "to run."
+msgstr "s untuk dijalankan."

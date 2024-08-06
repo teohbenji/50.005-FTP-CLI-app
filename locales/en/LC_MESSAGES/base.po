@@ -1,0 +1,35 @@
+msgid "Establishing connection to server..."
+msgstr "Establishing connection to server..."
+
+msgid "Connected"
+msgstr "Connected"
+
+msgid "Public key extracted from CA certificate."
+msgstr "Public key extracted from CA certificate."
+
+msgid "Certificate is within the validity period."
+msgstr "Certificate is within the validity period."
+
+msgid "Certificate verification successful."
+msgstr "Certificate verification successful."
+
+msgid "Certificate verification failed: {e}"
+msgstr "Certificate verification failed: {e}"
+
+msgid "Verification failed: {e}"
+msgstr "Verification failed: {e}"
+
+msgid "Enter a filename to send (enter -1 to exit):"
+msgstr "Enter a filename to send (enter -1 to exit):"
+
+msgid "Invalid filename. Please try again:"
+msgstr "Invalid filename. Please try again:"
+
+msgid "Closing connection..."
+msgstr "Closing connection..."
+
+msgid "Program took"
+msgstr "Program took "
+
+msgid "to run."
+msgstr "s to run."

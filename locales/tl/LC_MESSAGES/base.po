@@ -1,0 +1,35 @@
+msgid "Establishing connection to server..."
+msgstr "Pagtatatag ng koneksyon sa server..."
+
+msgid "Connected"
+msgstr "Kumonekta"
+
+msgid "Public key extracted from CA certificate."
+msgstr "Public key na kinuha mula sa CA certificate."
+
+msgid "Certificate is within the validity period."
+msgstr "Ang sertipiko ay nasa loob ng bisa ng panahon."
+
+msgid "Certificate verification successful."
+msgstr "Matagumpay ang pag-verify ng sertipiko."
+
+msgid "Certificate verification failed: {e}"
+msgstr "Nabigo ang pag-verify ng sertipiko: {e}"
+
+msgid "Verification failed: {e}"
+msgstr "Nabigo ang pag-verify: {e}"
+
+msgid "Enter a filename to send (enter -1 to exit):"
+msgstr "Ilagay ang pangalan ng file na ipadala (i-enter ang -1 para lumabas):"
+
+msgid "Invalid filename. Please try again:"
+msgstr "Hindi wastong pangalan ng file. Pakiulit muli:"
+
+msgid "Closing connection..."
+msgstr "Isinasara ang koneksyon..."
+
+msgid "Program took"
+msgstr "Ang programa ay tumagal ng "
+
+msgid "to run."
+msgstr "s upang tumakbo."
