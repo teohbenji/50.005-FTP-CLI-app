@@ -1,12 +1,8 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/klGEfp-A)
 
-# 50.005 Programming Assignment 2
+# FTP CLI App
 
-This assignment requires knowledge from Network Security and basic knowledge in Python.
-
-## Secure FTP != HTTPs
-
-Note that you will be implementing Secure FTP as your own whole new application layer protocol. In NO WAY we are relying on HTTP/s. Please do not confuse the materials, you don't need to know materials in Week 11 and 12 before getting started.
+SUTD 50.005 Computer System Engineering project. This app is designed to provide secure file transfer between a server app and a client app, using an authentication and confidentiality protocols. 
 
 ## Running the code
 
